@@ -83,4 +83,8 @@ Following commands should be input step by step.
 
 	go to http://localhost:8000/polls/
 
+	N.B if you enter into http://localhost:8000/, you will get error. 
+
+
+
  	
