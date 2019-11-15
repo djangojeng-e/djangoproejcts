@@ -31,4 +31,22 @@ Following commands should be input step by step.
 		if you see a message "Congratulations!" page with a rocket. 
 		You are good to go ahead! 
 
-	
+	7) Let's create a new app. 
+	   Make sure to create app in the same directory as manage.py 
+
+		$ python manage.py startapp polls 
+
+	8) Confirm if the following files and directories have been created 
+
+
+			polls/
+   			 __init__.py
+    		         admin.py
+   			 apps.py
+    			 migrations/
+        			__init__.py
+    				models.py
+    				tests.py
+    				views.py
+
+	9)  	
