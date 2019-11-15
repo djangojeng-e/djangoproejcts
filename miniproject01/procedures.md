@@ -39,6 +39,7 @@ Following commands should be input step by step.
 	8) Confirm if the following files and directories have been created 
 
 
+
 			polls/
    			 __init__.py
     		         admin.py
@@ -49,4 +50,37 @@ Following commands should be input step by step.
     				tests.py
     				views.py
 
-	9)  	
+
+
+	9) Go to polls/url.py and add the following code. 
+
+
+	from django.urls import path
+
+	from . import views
+
+	urlpatterns = [
+    	path('', views.index, name='index'),
+	] 
+
+
+	10) Now, you will need to point the root URLconf at the polls.urls modeu	    le 
+
+	go to mysite/urls.py, add the follwing code.  
+
+	from django.contrib import admin
+	from django.urls import include, path
+
+	urlpatterns = [
+    	path('polls/', include('polls.urls')),
+    	path('admin/', admin.site.urls),
+	]
+
+
+	11) Verify if index view into the URLconf. 
+
+		$ python manage.py runserver 
+
+	go to http://localhost:8000/polls/
+
+ 	
