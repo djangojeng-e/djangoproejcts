@@ -9,8 +9,16 @@ contains simple djangoprojects
 
 $ pip install django
 
-Terminal can be located on the bottom of Pycharm window.  
+* Terminal can be located on the bottom of Pycharm window.  
 
 ## 3. Create manage.py using the command
  
-   $ django-admin startproject config .  
+   $ django-admin startproject config .
+
+## 4. Create DB file and initialise it using the command below. 
+
+   $ python manage.py migrate 
+
+## 5. Locate db.sqlite3 file after the command $ python manage.py migrate 
+
+  
