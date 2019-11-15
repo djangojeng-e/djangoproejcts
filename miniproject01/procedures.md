@@ -87,4 +87,73 @@ Following commands should be input step by step.
 
 
 
- 	
+	# Setting UP Database
+
+
+	1) Go to mysite/ open settings.py
+	   Confirm the default contents. Run the following code in terminal. 
+ 
+
+		$ python manage.py  	
+
+	2) Edit polls/models.py 
+
+		from django.db import models 
+
+		class Questions(models.Model): 
+		    question_text = 
+		models.CharField(max_length=200)
+		    pub_date = 
+		models.DateTimeField('date published') 
+
+
+		class Choice(models.Model): 
+		    question = 
+		models.ForeignKey(Question, 
+		on_delete=models.CASCADE)
+		    choice_text = 
+		models.CharField(max_length=200)
+		    votes = 
+		models.IntegerField(Default=0)
+
+	3) To include the app in the project, a reference to its configuration c	   lass has to be added in the INSTALLED_APPS setting. 
+
+	   go to mysite/settings.py 
+
+	   INSTALLED_APPS = [
+    	   'polls.apps.PollsConfig',
+    	   'django.contrib.admin',
+    	   'django.contrib.auth',
+    	   'django.contrib.contenttypes',
+    	   'django.contrib.sessions',
+    	   'django.contrib.messages',
+    	   'django.contrib.staticfiles',
+	   ]
+
+
+	4) Now, polls app has been included in the project. Run another command: 
+
+		$ python manage.py makemigrations polls 
+
+
+	5) Once the following is shown on the output, 
+
+
+	Migrations for 'polls':
+  	polls/migrations/0001_initial.py:
+    	- Create model Choice
+    	- Create model Question
+    	- Add field question to choice	
+
+
+	6) run the command 
+
+		$ python manage.py sqlmigrate polls 0001
+
+
+	7) Run migrate again to create those model tables in the database. 
+
+
+		$ python manage.py migrate 
+
+	
