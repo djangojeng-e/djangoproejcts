@@ -1,0 +1,2 @@
+# djangoproejcts
+contains simple djangoprojects
