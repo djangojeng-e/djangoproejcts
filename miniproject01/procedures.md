@@ -156,4 +156,16 @@ Following commands should be input step by step.
 
 		$ python manage.py migrate 
 
+
+
+#	Playing with the API 
+
+
+	
+	1) Run the command 
+
+		$ python manage.py shell 
+
+	I have stuck in this stage. Problem is being resolved. 
+
 	
