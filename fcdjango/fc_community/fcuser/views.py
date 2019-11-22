@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Fcuser
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 
 def register(request):
@@ -16,7 +17,7 @@ def register(request):
 
         fcuser = Fcuser(
             username=username,
-            password = password 
+            password = make_password(password) 
         )
 
         fcuser.save()
