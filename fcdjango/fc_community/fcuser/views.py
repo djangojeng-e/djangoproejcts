@@ -10,9 +10,9 @@ def register(request):
         username = request.POST['username']
         password = request.POST['password']
         re_password = request.POST['re-password']
-        
-        if password != re-password:
-            return HttpResponse('비밀번호가 다릅니다')
+        res_data = {}
+        if 'password' != 're-password':
+            res_data['error'] = '비밀번호가 다릅니다.'
 
         fcuser = Fcuser(
             username=username,
@@ -20,5 +20,5 @@ def register(request):
         )
 
         fcuser.save()
-        return render(request, 'register.html')
+        return render(request, 'register.html', res_data)
 
