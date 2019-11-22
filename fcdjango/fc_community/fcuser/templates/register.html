@@ -17,7 +17,8 @@
     <div class="row mt-5">
         <div class="col-12">
             <h1>회원가입</h1>
-        <form>
+        <form method="POST" action=".">
+            {% csrf_token %}
             <div class="form-group">
                 <label for="Username">사용자 이름</label>
                 <input type="text" class="form-control" id="username" aria-describedby="emailHelp"
