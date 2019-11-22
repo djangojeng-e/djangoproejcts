@@ -12,14 +12,17 @@ def register(request):
         password = request.POST['password']
         re_password = request.POST['re-password']
         res_data = {}
-        if 'password' != 're-password':
+
+        if not (username and password and re_password):
+            res_data['error'] = "모든필드를 입력해야 합니다."
+        elif 'password' != 're-password':
             res_data['error'] = '비밀번호가 다릅니다.'
+        else:
+            fcuser = Fcuser(
+                username=username,
+                password = make_password(password) 
+            )
 
-        fcuser = Fcuser(
-            username=username,
-            password = make_password(password) 
-        )
-
-        fcuser.save()
+            fcuser.save()
         return render(request, 'register.html', res_data)
 
