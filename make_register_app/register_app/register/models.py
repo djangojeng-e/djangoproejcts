@@ -12,5 +12,7 @@ class Django_user(models.Model):
 
     class Meta:
         db_table = 'Djangojenge_user'
+        verbose_name = "장고쟁이 사용자"
+        verbose_name_plural = "장고쟁이 사용자"
 
 
