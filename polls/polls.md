@@ -6,7 +6,13 @@ Made another folder to start polls app guided in basic django tutorial on django
 
 
 
+
+
 Go to polls/views.py and put the code in it. 
+
+
+
+
 
 
 
@@ -21,7 +27,11 @@ def index(request):
 
 ```
 
+
+
 The view has been created. Now, we might need to map it to a URL. 
+
+
 
 
 
