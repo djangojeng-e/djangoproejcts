@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 # Create your views here.
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.http import Http404
 
@@ -20,8 +20,8 @@ def detail(request, question_id): # This part has been edited.
     return render(request, 'polls/detail.html', {'question': question})
     
 def results(request, question_id): 
-    response = "You're looking at the results of quesiton %s."
-    return HttpResponse(response % question_id)
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
 
 def vote(request, question_id): 
     def vote(request, question_id):
