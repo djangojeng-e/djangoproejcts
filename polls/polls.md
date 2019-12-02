@@ -534,5 +534,475 @@ Playing with database API section finished with this testing.
 
 
 
+Django provides basic admin interface to allow staff or clients to add, change and delete content. 
 
+
+
+Note : The admin is not intended to be used by site visitors. It's for the site managers. 
+
+
+
+## Creating an admin user 
+
+
+
+Create a user who can login to the admin site by running the command below. 
+
+
+
+$ python manage.py createsuperuser 
+
+
+
+The command will ask you to input username, email address and password. 
+
+To test this admin page, enter the following command. 
+
+
+
+$ python manage.py runserver 
+
+
+
+Then, enter http://127.0.0.1:8000/admin/
+
+
+
+#### Make the poll app modifiable in the admin 
+
+
+
+Polls app is not displayed on the admin index page. We will need to tell the admin that Question objects have an admin interface. 
+
+
+
+**Open polls/admin.py** and add the following codes. 
+
+
+
+```python
+from django.contrib import admin
+
+from .models import Question
+
+# Register your models here.
+
+
+admin.site.register(Question)
+```
+
+Now, Django knows that Question has been registered and it should be displayed on the admin index page. 
+
+
+
+Once you click on Questions, please note the followings. 
+
+
+
+- The form is automatically generated from the Question model. 
+- DateTimeField, CharField correspond to the appropriate HTML input widget. Each type of field knows how to display itself in the Django admin. 
+- DateTimeField gets free Javascript shortcuts. 
+
+
+
+- Save - Saves changes and returns to the change-list page for this type of obejct. 
+- Save and continue editing - Saves changes and reloads the admin page for this object. 
+- Save and add another - Saves changes and loads a new, blank form for this type of obejct. 
+- Delete - Displays a delete confirmation page. 
+
+
+
+# Django Tutorial part 3. Views 
+
+
+
+
+
+**Views** is a type of Web page in your Django application that generally serves a specific function and has a specific template. 
+
+
+
+In polls applications, the following views will be implemented: 
+
+
+
+- **Question "index" page** - displays the latest few questions. 
+- **Question "detail" page** - displays a question text, with no results but with a form to vote. 
+- **Question "results" page** - displays results for a particular question. 
+- **Vote action** - handles voting for a particular choice in a particular question. 
+
+
+
+**In Django, web pages and other contents are delivered by views.**
+
+
+
+
+
+# Writing more views
+
+
+
+
+
+**Few more views have to be added on polls/views.py**  These views are slightly different, because they take an argument. 
+
+
+
+**Go to polls/views.py** 
+
+
+
+```python
+def detail(request, question_id):
+    return HttpResponse("You're looking at question %s." % question_id)
+
+def results(request, question_id):
+    response = "You're looking at the results of question %s."
+    return HttpResponse(response % question_id)
+
+def vote(request, question_id):
+    return HttpResponse("You're voting on question %s." % question_id)
+```
+
+
+
+New views have been added. Now, these new views should be wired into the polls.urls module by adding the following path() calls. 
+
+
+
+**Go to polls/urls.py** and wire the new views into polls.urls.
+
+
+
+```python
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    # ex: /polls/
+    path('', views.index, name='index'),
+    # ex: /polls/5/
+    path('<int:question_id>/', views.detail, name='detail'),
+    # ex: /polls/5/results/
+    path('<int:question_id>/results/', views.results, name='results'),
+    # ex: /polls/5/vote/
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+```
+
+
+
+# Write views that actually do something
+
+
+
+Since view is responsible for doing one of two things 
+
+- Returning an HttpResponse object containing the content for the requested page 
+- Raising an exception such as Http404. 
+
+
+
+View can the followings: 
+
+- Read records from a Database 
+- Can use a template system such as Django's or third-party Python template system. 
+- Generate a PDF file, output XML, create ZIP file on the fly
+- Anything you want using whatever Python libraries you want. 
+
+
+
+**A new index() view, which displays the latest 5 poll questions in the system, separated by commas, according to publication date.** 
+
+
+
+```python
+from django.http import HttpResponse
+
+from .models import Question
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ', '.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
+
+# Leave the rest of the views (detail, results, vote) unchanged
+```
+
+
+
+Now, realise that the views.py has been hard-coded in the view. If you want to change the way the page looks, you will have to edit this Python code a lot. 
+
+
+
+> There, Django's template system steps in to separate the design from Python by creating a template that the view can use!
+
+
+
+**Now, create a directory called templates in polls directory**
+
+
+
+**Templates** setting describes how Django will load and render templates.
+
+
+
+> Django is unable to distinguish between the same template names. The right template must be pointed in Django. The easiest way to ensure this is by namespacing. 
+>
+> That is. putting those templates inside another directory named for the application itself. 
+
+
+
+**Go to polls/templates/polls/index.html** 
+
+This will be instructing Django what to display in the templates. 
+
+
+
+```html
+
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/polls/{{ question.id }}/">{{ question.question_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
+
+
+
+```
+
+**index view in polls/views.py has to be updated to use the template:**
+
+
+
+Go to polls/views.py and update index(request) 
+
+
+
+```python
+from django.http import HttpResponse
+from django.template import loader
+
+from .models import Question
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    template = loader.get_template('polls/index.html')
+    context = {
+        'latest_question_list': latest_question_list,
+    }
+    return HttpResponse(template.render(context, request))
+```
+
+
+
+The code above loads the template called **polls/index.html** and passes it a context. The context is a dictionary mapping template variable names to Python objects. 
+
+
+
+**There is a shortcut method : render()**
+
+Find the polls/views.py using the shortcut. 
+
+
+
+```python
+from django.shortcuts import render
+
+from .models import Question
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+```
+
+
+
+**The render() function takes the request object as its first argument, a template name as its second argument** and **a dictionary as its optional third** argument. It returns an **HttpResponse** object of the given template rendered with the given context. 
+
+
+
+
+
+# Raising a 404 error 
+
+
+
+Now, it is a time to tackle the question detail view - the page that displays the question text for a given poll. 
+
+
+
+**Go to polls/views.py**
+
+
+
+```python
+from django.shortcuts import render
+
+# Create your views here.
+from django.http import HttpResponse
+from django.template import loader
+from django.http import Http404
+
+from .models import Question 
+
+
+def index(request):
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    context = {'latest_quesiton_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
+
+
+def detail(request, question_id): # This part has been edited.
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        raise Http404("Question does not exist")
+    return render(request, 'polls/detail.html', {'question': question})
+
+def results(request, question_id): 
+    response = "You're looking at the results of quesiton %s."
+    return HttpResponse(response % question_id)
+
+def vote(request, question_id): 
+    return HttpResponse("You're voting on question %s." % question_id)
+
+```
+
+
+
+HTTP404 exception raised if a question with the request ID does not exist. 
+
+polls/views.py has been udated with HTTP404 on detail. This should be applied to templates/polls/detail.html 
+
+**Create a file polls/templates/polls/detail.html and add the following**
+
+
+
+```html
+{{ question }}
+```
+
+
+
+#### Using shortcuts detail() view, go to polls/views.py 
+
+
+
+```python
+from django.shortcuts import get_object_or_404, render
+
+from .models import Question
+# ...
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
+```
+
+
+
+**get_object_or_404()** takes a Django model as its first argument and an arbitary number of keyword arguments, which it passes to the get() function of the model's manager. It raises Http404 if the object doesn't exist. 
+
+
+
+
+
+# Use the template system
+
+
+
+/templates/polls/detail.html has to be updated to give a look. 
+
+
+
+```python
+<h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+```
+
+# Removing hardcoded URLs in templates 
+
+
+
+Check out polls/index.html template 
+
+
+
+Since polls.urls module defined the name argument in path() functions. **you can remove a reliance on specific URL paths defined in your url configurations by using the {% url %} template tag:** 
+
+
+
+```django
+<li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
+```
+
+
+
+# Namespacing URL names 
+
+
+
+In this tutorial, we only have polls app. However, in the real Django projects, there might be five, ten, twenty apps or more. 
+
+
+
+Naming URLs could be issue as URL names should carry meanings of the URLs. URL names might have to indicate what the URL does or represent the app itself. What if there are same URL names in different apps? 
+
+
+
+If one URL name is used in one app, the developer might want to use the same URL name for different apps too. 
+
+
+
+**Keeping the namespaces of urls will come to be very important.**
+
+
+
+Fortunately, Django provides the answer for this by adding namespaces to your URLconf. 
+
+
+
+**To demonstrate this, go to polls/urls.py and add an app_name to set the application namespace:**
+
+
+
+Go to **polls/urls.py and add app_name**
+
+
+
+```python
+from django.urls import path
+
+from . import views
+
+app_name = 'polls'
+urlpatterns = [
+    path('', views.index, name='index'),
+    path('<int:question_id>/', views.detail, name='detail'),
+    path('<int:question_id>/results/', views.results, name='results'),
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+```
+
+Now, change templates/polls/index.html to point at the namespaced detail view. 
+
+
+
+```django
+<li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+```
 
