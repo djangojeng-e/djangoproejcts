@@ -1006,3 +1006,421 @@ Now, change templates/polls/index.html to point at the namespaced detail view.
 <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
 ```
 
+
+
+
+
+# Write a simple form
+
+
+
+
+
+The tutorial updates poll detail template ("polls/detail.html") from the last tutorial. 
+
+
+
+go to polls/templates/polls/detail.html
+
+```django
+<h1>{{ question.question_text }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'polls:vote' question.id %}" method="post">
+{% csrf_token %}
+{% for choice in question.choice_set.all %}
+    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+{% endfor %}
+<input type="submit" value="Vote">
+</form>
+```
+
+**Quick notes here..** 
+
+
+
+- Template displays a radio button for each question Choice. 
+
+  The value of each radio button is the associated question Choice's Id. The name of each radio button is "Choice". 
+
+- When the user selects one of the radio buttons and submits the form, it'll send the POST data choice=#. 
+
+- action is set to {% url 'polls:vote' question.id %}
+
+- method="post" is important because submitting this form will alter data server-side. 
+
+- forloop.counter indicates how many times for tag has gone through the loop. 
+
+- **{% csrf_token %} template tag protects Data from Cross Site Request Forgeries.** 
+
+
+
+Go to polls/views.py, add the followings
+
+
+
+```python
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+
+from .models import Choice, Question
+# ...
+def vote(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST['choice'])
+    except (KeyError, Choice.DoesNotExist):
+        # Redisplay the question voting form.
+        return render(request, 'polls/detail.html', {
+            'question': question,
+            'error_message': "You didn't select a choice.",
+        })
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+        # Always return an HttpResponseRedirect after successfully dealing
+        # with POST data. This prevents data from being posted twice if a
+        # user hits the Back button.
+        return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+```
+
+This code added does a few things that would sound very taunting to the beginners. At this stage, it might be wise to follow the process first here and come back to this point later. 
+
+
+
+**Come back to polls/views.py, add the following to results()** 
+
+
+
+```python
+from django.shortcuts import get_object_or_404, render
+
+
+def results(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/results.html', {'question': question})
+```
+
+# 
+
+polls/views.py points to polls/results.html. Hence, **the file has to be created. polls/templates/polls/results.html**. The, add the following codes. 
+
+
+
+```django
+<h1>{{ question.question_text }}</h1>
+
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+```
+
+
+
+# Use generic views: Less Code 
+
+
+
+detail(), results(), index() views are similar. 
+
+These views represent a common case of basic web development. 
+
+**Getting data from the database according to a parameter passed in the URL, loading a template and returning the rendered template.** 
+
+
+
+Django provides a shortcut, "generic views" system. Generic views abstract common patterns to the point where you don't even need to write Python code to write an app. 
+
+
+
+Steps to make the use of generic views system. 
+
+
+
+1. Convert the URLconf.
+2. Delete some of the old, unneeded views. 
+3. Introduce new views based on Django's generic views. 
+
+
+
+### Amend URLconf
+
+
+
+Go to polls/urls.py and amend it. 
+
+
+
+```python
+from django.urls import path
+
+from . import views
+
+app_name = 'polls'
+urlpatterns = [
+    path('', views.IndexView.as_view(), name='index'),
+    path('<int:pk>/', views.DetailView.as_view(), name='detail'),
+    path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
+    path('<int:question_id>/vote/', views.vote, name='vote'),
+]
+```
+
+
+
+<question_id> has changed to <pk>
+
+
+
+### Amend views 
+
+
+
+Remove old index, detail, and results views and start using Django's generic views instead. To do so, 
+
+
+
+Go to polls/views.py file and change it like below. 
+
+
+
+```python
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
+from django.views import generic
+
+from .models import Choice, Question
+
+
+class IndexView(generic.ListView):
+    template_name = 'polls/index.html'
+    context_object_name = 'latest_question_list'
+
+    def get_queryset(self):
+        """Return the last five published questions."""
+        return Question.objects.order_by('-pub_date')[:5]
+
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = 'polls/detail.html'
+
+
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'polls/results.html'
+
+
+def vote(request, question_id):
+    ... # same as above, no changes needed.
+```
+
+
+
+**ListView and DetailView** are two generic views. These two views abstract the concepts of "display a list of objects" and "display a detail page for a particular type of obejct."
+
+
+
+
+
+# Automated Testing 
+
+
+
+Testing is a simple routine that check the operation of the code. 
+
+
+
+Back in tutorial part2, we used the shell to examine the behaviour of a method, or running the application and entering data to check how it behaves. 
+
+
+
+**Difference between automated tests and testing itself**
+
+
+
+Automated tests is the testing work done for you by the system. You can check that your code still works as you originally intended, without having to perform time consuming manual testing. 
+
+
+
+Without tests, the purpose or intended behaviour of an application might be rather opaque. 
+
+
+
+> Jacob Kaplan-Moss, one of Django's original developers, says "Code without tests is broken by design"
+
+
+
+Tests help team work together. Tests identify the areas to fix. Tests guarantee that colleagues don't inadvertently break your code and you don't break theirs without knowing. 
+
+
+
+# Basic Testing Strategies 
+
+
+
+### test-driven development 
+
+
+
+Write the tests before writing the code. Describe a problem, then create some code to solve it. Test-driven development simply formalises the problem in a Python test Case. 
+
+
+
+Doing the tests or writing some tests earlier is always right. 
+
+
+
+Good testing practice is based on making a good choice on when to run the test. In many cases, it's good to write your first test the next time you make a change, either when you add a new feature or fix a bug. 
+
+
+
+
+
+# Writing on first test  
+
+
+
+### Identify a bug 
+
+
+
+Question.was_published_recently() method returns True if the Question was published within the last day but also if the Question's pub_date field is in the future. 
+
+
+
+Confirm the bug by using the shell to check the method on a question whose date lines in the future. 
+
+
+
+$ python manage.py shell 
+
+
+
+# Create a test to expose the bug
+
+
+
+
+
+**Go to polls/tests.py and start writing the tests.** 
+
+
+
+```python
+import datetime
+
+from django.test import TestCase
+from django.utils import timezone
+
+from .models import Question
+
+
+class QuestionModelTests(TestCase):
+
+    def test_was_published_recently_with_future_question(self):
+        """
+        was_published_recently() returns False for questions whose pub_date
+        is in the future.
+        """
+        time = timezone.now() + datetime.timedelta(days=30)
+        future_question = Question(pub_date=time)
+        self.assertIs(future_question.was_published_recently(), False)
+```
+
+Here, django.test.TestCase subclass has been created with a method that creates a Question instance with a pub_date in the future. Then, check the output of was_published_recently() - ought to be False. 
+
+
+
+# Running tests 
+
+
+
+run the test using Terminal 
+
+
+
+$ python manage.py test polls 
+
+
+
+- manage.py test polls looked for tests in the polls application 
+- found a subclass of django.test.Testcase class 
+- Created a special database for the testing purpose 
+- Looked for test methods - ones whose names begin with test
+- test_was_published_recently_with_future_quesiton it created Question instance whose pub_date field is 30 days in the future 
+- Using the assertIs() method, discovered that its was_published_recently() returns True, though we wanted it to return False. 
+
+
+
+# Fixing the bug 
+
+
+
+Go to polls.models.py 
+
+
+
+
+
+```python
+def was_published_recently(self):
+    now = timezone.now()
+    return now - datetime.timedelta(days=1) <= self.pub_date <= now
+```
+
+After a bug identified, we wrote a test that exposes it and corrected the bug in the code so our test passes. 
+
+
+
+# More comprehensive test 
+
+
+
+Further pin down the was_published_recently() method. 
+
+Add two more test methods to the same class, to test the behaviour of the method more comprehensively: 
+
+
+
+Go to polls/tests.py 
+
+
+
+```python
+def test_was_published_recently_with_old_question(self):
+    """
+    was_published_recently() returns False for questions whose pub_date
+    is older than 1 day.
+    """
+    time = timezone.now() - datetime.timedelta(days=1, seconds=1)
+    old_question = Question(pub_date=time)
+    self.assertIs(old_question.was_published_recently(), False)
+
+def test_was_published_recently_with_recent_question(self):
+    """
+    was_published_recently() returns True for questions whose pub_date
+    is within the last day.
+    """
+    time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
+    recent_question = Question(pub_date=time)
+    self.assertIs(recent_question.was_published_recently(), True)
+```
+
+Now we have three tests that confirms that Question.was_published_recently() returns sensible values for past, recent and future questions. 
+
+
+
+# Test a View
+
+
+
+
+
