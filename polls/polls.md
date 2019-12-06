@@ -1422,5 +1422,274 @@ Now we have three tests that confirms that Question.was_published_recently() ret
 
 
 
+The polls application is fairly undiscriminating: it will publish any question, including ones whose pub_date filed lies in the future. 
 
+Improving this will involve setting a pub_date in the future. 
+
+
+
+**A test for a view**
+
+
+
+## The django Test Client 
+
+
+
+Django provides a test Client to simulate a user interacting with the code at the view level. We can use it in tests.py or even in the shell. 
+
+
+
+The tutorial demonstrates test using shell.  
+
+Followed the instructions in the shell to see the results described in the tutorial. 
+
+
+
+# Improving our view
+
+
+
+
+
+go to polls/views.py and amend get_queryset() method 
+
+
+
+# When testing, more is better 
+
+
+
+Test codes are getting complicated. However, it is important to test. Once you write the code, you don't need to write them again. 
+
+
+
+# Further Testing 
+
+
+
+
+
+The tutorial only introduces some of the basic of testing. 
+
+
+
+# Introduction to Static files
+
+
+
+Web applications generally need to serve additional files - such as images, JavaScript, or CSS - necessary to render the complete web page. In Django, we refer to these files as "static files". 
+
+
+
+**django.contrib.staticfiles** collects static files from each of your applications into a single location that can easily be served in production. 
+
+
+
+# Customise your app's look and feel
+
+
+
+create a folder static in polls directory. Django will refer to this folder for static files similar to the ways Django finds templates inside polls/templates. 
+
+
+
+**Static file namespacing**
+
+
+
+Just like templates, polls/static (rather than creating another polls subdirectory), but it would actually be a bad idea. 
+
+
+
+Django will choose the first static file it finds whose name matches. Django would be unable to distinguish between them. We need to be able to point Django at the right one, and the best way to ensure this is by namespacing them. 
+
+
+
+That is, by putting those static files inside another directory named for the application itself. 
+
+
+
+**Create style.css in polls/static/polls/style.css**
+
+
+
+add the following code 
+
+
+
+```css
+li a{
+    color: green;
+}
+```
+
+
+
+Next, add the following code at the top of **polls/templates/polls/index.html**
+
+
+
+```django
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}">
+```
+
+**{% static %}** template tag generates the absolute URL of static files. 
+
+That's all you need to do for development. 
+
+
+
+# Adding a background-image
+
+
+
+go to polls/static/polls/style.css 
+
+
+
+add the following 
+
+
+
+```css
+body {
+    background: white url("images/background.gif") no-repeat;
+}
+```
+
+
+
+# Customise the admin form 
+
+
+
+
+
+More than often, we all want to customise how the admin form looks and works. 
+
+
+
+**go to polls/admin.py,** add the following 
+
+
+
+```django
+from django.contrib import admin
+
+from .models import Question
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    fields = ['pub_date', 'question_text']
+
+admin.site.register(Question, QuestionAdmin)
+```
+
+
+
+# Adding related objects 
+
+
+
+**go to polls/admin.py**
+
+
+
+Register Choice with the admin just as we did with Question: 
+
+
+
+```python
+from django.contrib import admin
+
+from .models import Choice, Question
+# ...
+admin.site.register(Choice)
+```
+
+
+
+Make it to add bunch of Choices directly when you create the Question object. Let's make that happen. 
+
+
+
+Go to polls/admin.py. add the following codes. 
+
+
+
+```python
+from django.contrib import admin
+
+from .models import Choice, Question
+
+
+class ChoiceInline(admin.StackedInline):
+    model = Choice
+    extra = 3
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None,               {'fields': ['question_text']}),
+        ('Date information', {'fields': ['pub_date'], 'classes': ['collapse']}),
+    ]
+    inlines = [ChoiceInline]
+
+admin.site.register(Question, QuestionAdmin)
+```
+
+Django offers a tabular way of displaying inline related objects. Change **ChoiceInline** declaration to read: 
+
+
+
+go to polls/admin.py 
+
+
+
+```python
+class ChoiceInline(admin.TabularInline):
+    #...
+```
+
+
+
+# Customise the admin change list
+
+
+
+Django displays the **str()** of each object. It might be more helpful if we could display individual fields. To do that, use the **list_display** admin option which is a tuple of field names to display, as columns, on the change list page for the object: 
+
+
+
+Go to polls/admin.py 
+
+
+
+```python
+class QuestionAdmin(admin.ModelAdmin):
+    # ...
+    list_display = ('question_text', 'pub_date', 'was_published_recently')
+```
+
+
+
+You can improve further with a few attributes in **polls/models.py**
+
+
+
+```python
+class Question(models.Model):
+    # ...
+    def was_published_recently(self):
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
+    was_published_recently.admin_order_field = 'pub_date'
+    was_published_recently.boolean = True
+    was_published_recently.short_description = 'Published recently?'
+```
+
+ 
 
