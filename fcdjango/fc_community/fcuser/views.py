@@ -15,9 +15,9 @@ def register(request):
         
         res_data = {}
 
-        if not (username and password and re_password):
-            res_data['error'] = "모든필드를 입력해야 합니다."
-        elif 'password' != 'repassword':
+        # if not (username and password and re_password):
+        #     res_data['error'] = "모든필드를 입력해야 합니다."
+        if 'password' != 'repassword':
             res_data['error'] = '비밀번호가 다릅니다.'
         else:
             fcuser = Fcuser(
