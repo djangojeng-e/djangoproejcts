@@ -1,4 +1,4 @@
 {
-    "python.pythonPath": "fcdjango_venv/bin/python3.7",
+    "python.pythonPath": "/home/dhkang/.pyenv/versions/sample-env/bin/python",
     "git.ignoreLimitWarning": true
 }

@@ -1,4 +1,4 @@
 {
     "git.ignoreLimitWarning": true,
-    "python.pythonPath": "registerapp/bin/python3.7"
+    "python.pythonPath": "/home/dhkang/.pyenv/versions/sample-env/bin/python"
 }
