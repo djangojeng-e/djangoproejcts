@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Fcuser
 from django.contrib.auth.hashers import make_password, check_password
 # Create your views here.
+
+def home(request):
+    return HttpResponse('home!')
 
 def login(request):
     if request.method == "GET": 
@@ -18,7 +21,12 @@ def login(request):
         else:
             fcuser = Fcuser.objects.get(username=username)
             if check_password(password, fcuser.password):
-            
+                
+                request.session['user'] = fcuser.id    
+
+                return redirect('/')
+
+            # '/' 만 써주면, 현재 사이트의 루트로 이동 
             
             # 비밀번호가 일치, 로그인 처리 
                 
