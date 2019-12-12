@@ -5,14 +5,20 @@ from django.contrib.auth.hashers import make_password, check_password
 # Create your views here.
 
 def home(request):
-    return HttpResponse('home!')
+    user_id = request.session.get('user')
+
+    if user_id:
+        fcuser = Fcuser.objects.get(pk=user_id)
+    
+    return HttpResponse('Home!')
+    
 
 def login(request):
     if request.method == "GET": 
         return render(request, 'login.html')
     elif request.method == "POST":
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
+        username = request.POST['username']
+        password = request.POST['password']
         
         res_data = {}
 
@@ -30,7 +36,7 @@ def login(request):
             
             # 비밀번호가 일치, 로그인 처리 
                 
-                pass
+                
             else:
                 res_data["error"] = "비밀번호가 틀렷습니다."
 
