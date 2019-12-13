@@ -9,16 +9,17 @@ def home(request):
 
     if user_id:
         fcuser = Fcuser.objects.get(pk=user_id)
+        return HttpResponse(fcuser.username)
     
     return HttpResponse('Home!')
     
 
 def login(request):
-    if request.method == "GET": 
+    if request.method == 'GET': 
         return render(request, 'login.html')
-    elif request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+    elif request.method == 'POST':
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
         
         res_data = {}
 
@@ -26,9 +27,9 @@ def login(request):
             res_data['error'] = "모든값을 입력해야 합니다."
         else:
             fcuser = Fcuser.objects.get(username=username)
-            if check_password(password, fcuser.password):
+            if password == fcuser.password:
                 
-                request.session['user'] = fcuser.id    
+                request.session['user'] = fcuser.id   
 
                 return redirect('/')
 
@@ -36,9 +37,13 @@ def login(request):
             
             # 비밀번호가 일치, 로그인 처리 
                 
-                
+                # dfdf	333434
             else:
-                res_data["error"] = "비밀번호가 틀렷습니다."
+                res_data['error'] = '비밀번호가 틀렷습니다.'
+                print(fcuser.username)
+                print(fcuser.password)
+                print(fcuser.id)
+                print(password)
 
         return render(request, 'login.html', res_data)
 
