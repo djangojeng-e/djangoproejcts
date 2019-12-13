@@ -5,5 +5,5 @@ from django.http import HttpResponse
 
 
 def todoView(request):
-    return HttpResponse('Hello, this is todoliest.')
+    return render(request, 'todo.html')
 
