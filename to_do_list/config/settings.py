@@ -123,6 +123,7 @@ static_location = os.path.join(BASE_DIR, 'static')
 print(static_location)
 
 STATIC_URL = '/static/'
-STATICFILES_DIR = [
+
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
