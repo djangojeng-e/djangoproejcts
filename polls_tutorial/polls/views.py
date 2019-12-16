@@ -8,15 +8,14 @@ from .models import Question
 
 
 def index(request):
-    latest_questions = Question.objects.order_by('pub_date')[:5]
-    output = ", ".join(q.question_text for q in latest_questions)
+    latest_questions = Question.objects.order_by('-pub_date')[:5]
+    # output = ", ".join(q.question_text for q in latest_questions)
 
-    template = loader.get_template('polls/index.html')
-    recent_questions ={}
-    recent_questions['latest_questions'] = latest_questions
-    context = RequestContext(request, recent_questions)
+    # template = loader.get_template('polls/index.html')
 
-    return HttpResponse(template.render(context))
+    context = {'latest_questions': latest_questions}
+
+    return render(request, "polls/index.html", context)
 
 
 def detail(request, question_id):
