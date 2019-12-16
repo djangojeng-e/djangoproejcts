@@ -13,6 +13,11 @@ def home(request):
     
     return HttpResponse('Home!')
     
+def logout(request): 
+    if request.session.get('user'):
+        del(request.session['user'])
+
+    return redirect('/')
 
 def login(request):
     if request.method == 'GET': 
@@ -74,3 +79,5 @@ def register(request):
         return render(request, 'register.html', res_data)
 
 
+# 세션이란 무엇인가? 
+# 
