@@ -1,0 +1,24 @@
+<!Docty
+<head></head>
+
+<body>
+
+{% if latest_questions %}
+{% for question in latest_questions %}
+   <ul>
+    <li><a href="/polls/{{question.id}}">
+        <b> {{question.question_text}}</b></a></li>
+{% endfor %}
+   </ul>
+
+{% else %}
+    <p>You don't have any questions, please add some.</p>
+{% endif %}
+
+
+
+</body>
+
+
+
+</html>
