@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Fcuser
 from django.contrib.auth.hashers import make_password, check_password
+from .forms import LoginForm
+
 # Create your views here.
 
 def home(request):
@@ -20,37 +22,40 @@ def logout(request):
     return redirect('/')
 
 def login(request):
-    if request.method == 'GET': 
-        return render(request, 'login.html')
-    elif request.method == 'POST':
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
+    form = LoginForm()
+    return render(request, 'login.html', {'form':form})
+
+    # if request.method == 'GET': 
+    #     return render(request, 'login.html')
+    # elif request.method == 'POST':
+    #     username = request.POST.get('username', None)
+    #     password = request.POST.get('password', None)
         
-        res_data = {}
+    #     res_data = {}
 
-        if not (username and password): 
-            res_data['error'] = "모든값을 입력해야 합니다."
-        else:
-            fcuser = Fcuser.objects.get(username=username)
-            if password == fcuser.password:
+    #     if not (username and password): 
+    #         res_data['error'] = "모든값을 입력해야 합니다."
+    #     else:
+    #         fcuser = Fcuser.objects.get(username=username)
+    #         if password == fcuser.password:
                 
-                request.session['user'] = fcuser.id   
+    #             request.session['user'] = fcuser.id   
 
-                return redirect('/')
+    #             return redirect('/')
 
-            # '/' 만 써주면, 현재 사이트의 루트로 이동 
+    #         # '/' 만 써주면, 현재 사이트의 루트로 이동 
             
-            # 비밀번호가 일치, 로그인 처리 
+    #         # 비밀번호가 일치, 로그인 처리 
                 
-                # dfdf	333434
-            else:
-                res_data['error'] = '비밀번호가 틀렷습니다.'
-                print(fcuser.username)
-                print(fcuser.password)
-                print(fcuser.id)
-                print(password)
+    #             # dfdf	333434
+    #         else:
+    #             res_data['error'] = '비밀번호가 틀렷습니다.'
+    #             print(fcuser.username)
+    #             print(fcuser.password)
+    #             print(fcuser.id)
+    #             print(password)
 
-        return render(request, 'login.html', res_data)
+        # return render(request, 'login.html', res_data)
 
 
 def register(request):
