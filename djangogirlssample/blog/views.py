@@ -21,3 +21,4 @@ def post_list(request):
     f.close()
 
     return HttpResponse(html)
+
