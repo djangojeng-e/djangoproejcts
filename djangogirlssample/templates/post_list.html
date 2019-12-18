@@ -8,33 +8,25 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Poast List!</h1>
+<h1>Post List!</h1>
+
 <div>
+    {% for post in posts %}
+    <div>{{ post.title }} </div>
+    <div>{{ post.author }} </div>
+    <div>{{ post.created_date }} </div>
+    <div>{{ post.published_date }} </div>
+    {% endfor %}
 
-    <p>published:12 11 2019 14.38</p>
 
-<h2><a href="">My First Post</a></h2>
-<p>Lorem ipsum dolor sit amet, c
-    onsectetur adipisicing elit. Adipis
-    ci at delectus doloribus, est iure pe
-    rferendis quidem reiciendis rem rerum sit su
-    scipit veritatis voluptate. Ex exercitationem iu
-    re magnam tenetur. Explicabo, itaque?
-</p>
 </div>
 
 
-<div>
-    <p>published: 12.11.2019 14.39</p>
-    <h2><a href="">My Second Post</a></h2>
-    <p>Lorem ipsum dolor sit amet,
-        consectetur adipisicing elit.
-        Architecto beatae, consequatur cumque,
-        dicta doloremque eaque eligendi ex i
-        ure natus officia quaerat quia recusandae sequi. A
-        b aliquam in molestiae ratione similique!</p>
+<!--    {% for post in posts %}-->
 
-</div>
+<!--    <div>{{ post }}</div>-->
+
+<!--    {% endfor %}-->
 
 
 </body>

@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 import os
 # Create your views here.
+from blog.models import Post
 
 
 def post_list(request):
@@ -9,8 +10,12 @@ def post_list(request):
     # post_list,html을 찾아서
     # 그 파일을 text로 만들어서 Httpresponse형태로 돌려준다.
     # 위 기능을 하는 shortcut 함수
+    posts = Post.objects.all()
+    context = {
+        "posts": posts,
+    }
 
-    return render(request, 'post_list.html')
+    return render(request, 'post_list.html', context)
     # # 상위폴더(blog) 의 상위폴더 (djangogirls)의
     # # 하위폴더에 (templates)
     # # 하위파일 (post_list.html)의 내용을 read() 한 결과를
