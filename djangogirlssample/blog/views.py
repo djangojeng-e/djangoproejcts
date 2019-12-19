@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 import os
 # Create your views here.
 from blog.models import Post
@@ -32,4 +32,28 @@ def post_list(request):
     # f.close()
     #
     # return HttpResponse(html)
+
+def post_detail(request, pk):
+
+    #
+    # try:
+    #     post = Post.objects.filter(pk=pk)[0]
+    #
+    #     post = posts[0]
+    #
+    #     context = {
+    #         'post': post
+    #     }
+    # except:
+    #     return HttpResponse("없음.")
+
+    post = get_object_or_404(Post, pk=pk)
+
+    context = {
+        'post': post,
+    }
+
+
+    return render(request, 'post_detail.html', context)
+
 

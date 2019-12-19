@@ -126,3 +126,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+# Django가 개발단꼐에서 편의를 위해 제공
+# settings.STATIC_URL/<파일경로>/
+# -> 정적파일을 찾는 경로 /<파일 경로> 에 해당하는 파일을 응답으로 돌려줌
+
+#
