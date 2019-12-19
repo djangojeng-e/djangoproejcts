@@ -16,12 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from blog.views import post_list, post_detail
+from blog.views import post_list, post_detail, post_add
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # post-list라는 url에 온 요청은
     # blog.views.post_list 함수가 처리한다.
     path('posts/', post_list, name='url-name-post-list'),
-    path('post-detail/<int:pk>/', post_detail, name='url-name-post-detail'),
+    path('posts/<int:pk>/delete', post_delete, name='url-name-post-delete'),
+    path('posts/<int:pk>/', post_detail, name='url-name-post-detail'),
+    path('posts/add', post_add name='url-name-post-add'),
 ]
