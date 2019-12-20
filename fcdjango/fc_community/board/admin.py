@@ -3,6 +3,6 @@ from .models import Board
 
 # Register your models here.
 
-
+admin.site.register(Board)
 class BoardAdmin(admin.ModelAdmin):
     list_display = ('title',)
