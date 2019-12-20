@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Fcuser
 from django.contrib.auth.hashers import make_password, check_password
 from .forms import LoginForm
+from .forms import forms
 
 # Create your views here.
 
