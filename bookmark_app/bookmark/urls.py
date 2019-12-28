@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
-from .views import BookmarkListView, BookmarkCreateView
-
+from .views import BookmarkListView, BookmarkCreateView, BookmarkDetailView
 
 urlpatterns = [
     path('', BookmarkListView.as_view(), name='list'),
     path('add/', BookmarkCreateView.as_view(), name='add'),
-
+    path('detail/<int:pk>/', BookmarkDetailView.as_view(), name='detail'),
 ]
