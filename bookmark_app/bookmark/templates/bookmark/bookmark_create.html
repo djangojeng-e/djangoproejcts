@@ -1,3 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Bookmark Add {% endblock %}
+
+
+{% block content %}
+
 <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
@@ -6,5 +14,6 @@
 
 </form>
 
+{% endblock %}
 <!--form.as_p 클래스 형 뷰의 옵션 값으로 설정한 필드를 출력
     각 필드 폼 태그를 p테그로 감싸서 출력 -->
