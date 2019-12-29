@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DeleteView, UpdateView
 
 from .models import Photo
 
@@ -27,4 +27,16 @@ class PhotoUploadView(CreateView):
         else:
             return self.render_to_response({'form': form})
             # form 이 valid 하지 않다면, 작성된 내용을 그대로 작성 페이지에 표시.
+
+
+class PhotoDeleteView(DeleteView):
+    model = Photo
+    success_url = '/'
+    template_name = 'photo/delete.html'
+
+
+class PhotoUpdateView(UpdateView):
+    model = Photo
+    fields = {'photo', 'text'}
+    template_name = 'photo/update.html'
 
