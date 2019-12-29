@@ -35,12 +35,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">LogOut</a>
+                    <a href="{% url 'logout' %}" class="nav-link">LogOut</a>
                 </li>
 
                 {% else %}
                 <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">LogIn</a> </li>
-                <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link">SignUp</a></li>
+                <li class="nav-item"><a href="#" class="nav-link">SignUp</a></li>
 
                 {% endif %}
             </ul>
