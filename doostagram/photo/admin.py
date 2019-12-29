@@ -6,4 +6,9 @@ from .models import Photo
 
 @admin.register(Photo)
 class PhotoAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['id', 'author', 'created', 'updated']
+    raw_id_fields = ['author']
+    list_filter = ['created', 'updated', 'author']
+    search_fields = ['text', 'created']
+    ordering = ['-updated', '-created']
+
