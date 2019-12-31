@@ -4,6 +4,7 @@ from .models import Bookmark
 
 @admin.register(Bookmark)
 class BookmarkAdmin(admin.ModelAdmin):
+    # fields = ('site_name', 'url')
     pass
 
 
