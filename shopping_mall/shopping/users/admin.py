@@ -7,4 +7,4 @@ from .models import Users
 
 @admin.register(Users)
 class UsersAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('email',)
