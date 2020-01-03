@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 # Create your views here.
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 
 def index(request):
@@ -11,5 +11,11 @@ def index(request):
 class RegisterView(FormView):
     template_name = 'register.html'
     form_class = RegisterForm
+    success_url = '/'
+
+
+class LoginView(FormView):
+    template_name = 'login.html'
+    form_class = LoginForm
     success_url = '/'
 
