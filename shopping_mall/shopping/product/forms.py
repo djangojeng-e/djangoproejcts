@@ -22,8 +22,8 @@ class RegisterFrom(forms.Form):
     price = forms.IntegerField(
         error_messages={
             'required': '상품 가격을 입력해주세요'
-        },
-        max_length=20, label='상품가격'
+        }
+
     )
 
     description = forms.CharField(
@@ -45,7 +45,7 @@ class RegisterFrom(forms.Form):
         name = cleaned_data.get('name')
         price = cleaned_data.get('price')
         description = cleaned_data.get('description')
-        stock = cleaned_data('stock')
+        stock = cleaned_data.get('stock')
 
         if name and price and description and stock:
             product = Product(
