@@ -77,4 +77,4 @@ class LoginForm(forms.Form):
             if password != user.password:
                 self.add_error('password', '비밀번호가 틀렷습니다.')
             else:
-                self.user_id = Users.id
+                self.email = Users.email
