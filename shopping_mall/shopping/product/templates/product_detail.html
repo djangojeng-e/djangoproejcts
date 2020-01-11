@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+<div class="row mt-5">
+    <div class="col-12">
+        {{ product.id }}
+        {{ product.name }}
+        {{ product.price|intcomma }} 원
+        {{ product.register_date }}
+    </div>
+
+</div>
+
+
+{% endblock %}
