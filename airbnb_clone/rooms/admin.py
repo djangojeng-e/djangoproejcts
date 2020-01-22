@@ -53,7 +53,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     search_fields = ('=city', "^host__username")
 
-    filter_horizontal = ("amenties", "facilities", "house_rules")
+    filter_horizontal = ("amenities", "facilities", "house_rules")
 
 
 @admin.register(models.Photo)
