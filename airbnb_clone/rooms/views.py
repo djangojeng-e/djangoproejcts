@@ -1,6 +1,7 @@
 # from django.shortcuts import render, redirect
 # from django.core.paginator import Paginator, EmptyPage
 from django.views.generic import ListView
+from django.shortcuts import render
 from . import models
 
 
@@ -17,6 +18,9 @@ class HomeView(ListView):
     context_object_name = "rooms"
 
 
+def room_detail(request, pk):
+    print(pk)
+    return render(request, "rooms/detail.html")
 
 #
 # def all_rooms(request):
