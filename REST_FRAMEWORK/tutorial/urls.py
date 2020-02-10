@@ -31,3 +31,10 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('admin/', admin.site.urls),
 ]
+
+# We're using viewsets instead of views, we can automatically generate the URL conf for our API,
+# by simply registering the viewsets with a router class
+# If more control over the API URLs needed
+# It can be dropped down to using regular class-based views
+# include default login and logout views with the browsable API.
+

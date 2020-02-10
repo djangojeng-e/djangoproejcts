@@ -13,3 +13,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = ['url', 'name']
 
+
+# Notice that hyperlinked relation in this case with
+# HyperlinkedModelSerializer

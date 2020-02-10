@@ -21,3 +21,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+# Rather than write multiple views, we're grouping together
+# all the common behaviour into classes called
+# Viewsets
+# We can easily break these down into individual views
+# However, viewsets keeps the view logic organised as well as very concise.
+
+
