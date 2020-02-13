@@ -17,6 +17,18 @@ pymysql.install_as_MySQLdb()
 # There are some connectors to use MySQL on Django.
 # pymysql is one of those connectors between MySQL and Django.
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'onlineshop',
+        'USER': 'admin',
+        'PASSWORD': '1234',
+        'HOST': 'onlineshop.ctskq7umc1ur.ap-northeast-2.rds.amazonaws.com',
+        'PORT': '3306',
+    }
+}
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
