@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'shop',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -136,4 +137,26 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
+
+AWS_ACCESS_KEY_ID = 'IAM 엑세스 키 ID'
+AWS_SECRET_ACCESS_KEY = "비밀 엑세스 키"
+AWS_REGION = 'ap-northeast-2'
+AWS_STORAGE_BUCKET_NAME = 'django-onlineshop'
+AWS_S3_CUSTOM_DOMAINS = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME_AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_DEFAULT_ACL = 'public-read'
+AWS_LOCATION = 'static'
+
+# ALL AWS VARIABLES are required variables for boto3
+
+
+STATIC_URL = 'https://%s/%s' % (AWS_S3_CUSTOM_DOMAINS, AWS_LOCATION)
+STATICFIELS_STORAGE = 'storages.backends.s3boto3.s3Boto3Storage'
+
+# Add custome storage class
+
+DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
+
