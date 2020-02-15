@@ -409,3 +409,16 @@ $RECYCLE.BIN/
 
 ```
 
+
+
+
+
+## Creating a model to work with 
+
+
+
+The purpose of the tutorial is to start creating a simple Snippet model that is used to store code snippets. 
+
+
+
+ 
