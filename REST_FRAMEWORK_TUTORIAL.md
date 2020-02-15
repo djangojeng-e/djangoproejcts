@@ -644,3 +644,33 @@ serializer.data
 
 ```
 
+
+
+# Using ModelSerializers
+
+
+
+Similar to Django provides both form classes and ModelForm classes, REST framework includes both serializer classes and ModelSerializer classes. 
+
+
+
+Refactoring serializer using the ModelSerializer class, replace the SnippetSerializer class with the following. 
+
+
+
+```python
+class SnippetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Snippet 
+        fields = ['id', 'title', 'code', 'linenos','language', 'style']
+```
+
+
+
+**NB. ModelSerializer classes do not do anyting particular. They are simply a shortcut for creating serializer classes**
+
+
+
+- An automatically determined set of fields. 
+- Simple default implementations for the create() and update() methods. 
+

@@ -12,6 +12,8 @@ STYLE_CHOICES = sorted([(item, item) for item in get_all_styles()])
 
 
 class Snippet(models.Model):
+    # DB Index 설정
+    # created = models.DateTimeField(auto_now_add=True, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
     code = models.TextField()
@@ -21,3 +23,14 @@ class Snippet(models.Model):
 
     class Meta:
         ordering = ['created']
+        # DB index 설정 (Model.Meta)
+        indexes = [
+            models.Index(fields=['created'])
+        ]
+        # index 값 없이 정렬할때는 정렬 연산이 복잡해 지기 때문에
+        # index 값을 지정해 주는것이 좋음.
+
+
+
+
+
