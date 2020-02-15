@@ -518,3 +518,94 @@ e.g. {'base_template': 'textarea.html'}
 
 
 
+# Working with Serializers 
+
+
+
+The tutorial creates a couple of code snippets to work with. 
+
+
+
+
+
+```python
+from snippets.models import Snippet 
+from snippets.serializers import SnippetSerializer 
+from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser 
+
+snippet = Snippet(code='foo = "bar"\n')
+snippet.save()
+
+snippet = Snippet(code='print("hello, world")\n')
+snippet.save()
+
+```
+
+
+
+Now, a few snippet instances have been created. 
+
+**The model instance has been translated into Python native datatypes.**
+
+
+
+> To finalise the serialisation process, the data is rendered into json. 
+>
+> 
+
+```python
+serializer = SnippetSerializer(snippet)
+serializer.data
+# {'id': 2, 'title': '', 'code': 'print("hello, world")\n', 'linenos': False, 'language': 'python', 'style': 'friendly'}
+
+
+content = JSONRenderer().render(serializer.data)
+content
+# b'{"id": 2, "title": "", "code": "print(\\"hello, world\\")\\n", "linenos": false, "language": "python", "style": "friendly"}'
+```
+
+
+
+
+
+Similarly, Deserialization is similar. parse a stream into Python native datatypes.. 
+
+
+
+
+
+```python
+import io 
+
+stream = io.BytesIO(content)
+data = JSONParser().parse(stream)
+
+
+
+serializer = SnippetSerializer(data=data)
+serializer.is_valid()
+# True 
+
+serializer.validated_data
+# OrderedDict 
+
+serializer.save()
+```
+
+
+
+API is pretty similar to working with forms. The similarity should become even more apparent when writing views to use the serializer. 
+
+
+
+We can also serialize querysets instead of model instances. we can simply add a many=True flag to the serializer arguments. 
+
+
+
+```
+serializer = SnippetSerializer(Snippet.objects.all(), many=True)
+serializer.data 
+
+```
+
