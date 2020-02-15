@@ -25,13 +25,21 @@ class SnippetSerializer(serializers.Serializer):
         :param validated_data:
         :return:
         """
-        instance.title = validated_data.get('title', instance.title)
-        instance.code = validated_data.get('code', instance.code)
-        instance.linenos = validated_data.get('linenos', instance.linenos)
-        instance.language = validated_data.get('language', instance.language)
-        instance.style = validated_data.get('style', instance.style)
+        for key, value in validated_data:
+            setattr(instance, key, value)
         instance.save()
         return instance
+            # instance.a = 'apple'
+            # setattr(instance, 'a', 'apple')
+
+        #
+        # instance.title = validated_data.get('title', instance.title)
+        # instance.code = validated_data.get('code', instance.code)
+        # instance.linenos = validated_data.get('linenos', instance.linenos)
+        # instance.language = validated_data.get('language', instance.language)
+        # instance.style = validated_data.get('style', instance.style)
+        # instance.save()
+        # return instance
 
     class Meta:
         model = Snippet
