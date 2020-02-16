@@ -877,3 +877,118 @@ HTTP/1.1 200 OK
 > So far, Serialization API feels similar to Django's Forms API, and some regular Django Views. 
 
 > 
+
+
+
+
+
+# 2. Requests and Responses 
+
+
+
+## Request objects 
+
+
+
+REST framework introduces a request object that extends the regular HttpRequest, and provides more flexible request parsing. **request.data** is a core functionality of the Request object which is similar to request.POST. 
+
+
+
+```python
+request.POST 	# Only handles from data, Only works for 'POST' method 
+request.data	# Handles arbitrary data. Works for 'POST', 'PUT' and 'PATCH' methods 
+```
+
+
+
+
+
+## Response objects 
+
+
+
+REST framework also introduces a response object. which is a type of TemplateResponse that makes unrendered content and uses content negotiation to determine the correct content type to return to the client. 
+
+
+
+```python
+return Response(data)	# Renders to content type as requested by the client
+```
+
+
+
+
+
+## Status codes 
+
+
+
+Numeric HTTP status codes in the views does not always make for obvious reading, it is not that easy to notice if you get an error code wrong. REST framework provides more explicit identifiers for each status code, such as HTTP_400_BAD_REQUEST in the status module. 
+
+
+
+It's a good idea to use these throughout rather than using numeric identifiers. 
+
+
+
+## Wrapping API views 
+
+
+
+REST framework provides two wrappers you can use to wrie API views. 
+
+
+
+- @api_view decorator for working with function based views. 
+- APIView class for working with class-based views. 
+
+
+
+These wrappers provide a few bits of functionality such as making sure you receive request instances in your view, and adding context to Response objects so that content negotiation can be performed. 
+
+
+
+The wrappers also provide behaviour such as returning 405 Method Not Allowed responses which appropriate, and handling any ParseError exception that occurs when accessing request.data with malformed input. 
+
+
+
+
+
+## Pulling it all together 
+
+
+
+
+
+Fix the view with APIView, instead of JSONResponse, we use Response. 
+
+
+
+Instance view is an imporvement over the previous view. It is a bit more concise and the code feels very similar to Forms API. Status codes are named with more meaningful words. 
+
+
+
+The way it gets improved would feel very familiar. It shouldn't feel too much different from working with regular Django views. 
+
+
+
+**request.data** can handle incoming json requests, but it can handle other formats. 
+
+
+
+Similary, we're returning response objects with data, but allowing REST framework to render the response into the correct content type for us. 
+
+
+
+
+
+
+
+## Adding optional format suffixes to our URLs 
+
+
+
+To take advantage of the fact that our responses are no longer hardwired to a single content type let's add support for format suffixes to our API endpoints. Using format suffixes gives URLs that explicity refer to a given format, and means the API will be able to handle URLs. 
+
+
+
