@@ -1120,3 +1120,43 @@ Having a web-browable API is a big win which makes developing and using the API 
 
 
 
+
+
+# 3. Class-based Views 
+
+
+
+We can also write our API views using class-based views, rather than function based views. 
+
+This will allow us to reuse common functionality, and helps keep the code DRY. 
+
+
+
+**DRY - Don't Repeat Yourself**
+
+
+
+
+
+## Rewriting API using class-based views 
+
+
+
+views.py will be refactored with class-based views. 
+
+
+
+
+
+By refactoring, it looks pretty similar to the previous case. However, it has better separation between the different HTTP methods. 
+
+
+
+After refactoring, it is still pretty similar to the function based view. After refactoring has been completed, snippets/urls.py has to be refactored too. 
+
+
+
+
+
+
+
