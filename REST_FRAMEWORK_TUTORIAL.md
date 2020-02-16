@@ -1009,3 +1009,114 @@ urlpatterns = format_suffix_patterns(urlpatterns
 
 Adding this will give a simple, clean way of referring to a specific format. 
 
+
+
+## Testing the API 
+
+
+
+
+
+```bash
+# Enter the following command while the server is on runserver 
+
+http http://127.0.0.1:8000/snippets/ 
+
+
+
+HTTP/1.1 200 OK
+...
+[
+  {
+    "id": 1,
+    "title": "",
+    "code": "foo = \"bar\"\n",
+    "linenos": false,
+    "language": "python",
+    "style": "friendly"
+  },
+  {
+    "id": 2,
+    "title": "",
+    "code": "print(\"hello, world\")\n",
+    "linenos": false,
+    "language": "python",
+    "style": "friendly"
+  }
+]
+```
+
+
+
+> We can control the format of the response that we get back, either by using Accept header: 
+
+
+
+```bash
+http http://127.0.0.1:8000/snippets/ Accept:application/json  # Request JSON
+http http://127.0.0.1:8000/snippets/ Accept:text/html         # Request HTML
+
+http http://127.0.0.1:8000/snippets.json  # JSON suffix
+http http://127.0.0.1:8000/snippets.api   # Browsable API suffix
+```
+
+
+
+
+
+> Similary, the format of the request that we send can be controlled using content-type header 
+
+
+
+
+
+```bash
+# POST using form data
+http --form POST http://127.0.0.1:8000/snippets/ code="print(123)"
+
+{
+  "id": 3,
+  "title": "",
+  "code": "print(123)",
+  "linenos": false,
+  "language": "python",
+  "style": "friendly"
+}
+
+# POST using JSON
+http --json POST http://127.0.0.1:8000/snippets/ code="print(456)"
+
+{
+    "id": 4,
+    "title": "",
+    "code": "print(456)",
+    "linenos": false,
+    "language": "python",
+    "style": "friendly"}
+    
+    
+ # Adding --debug switches to the http requests above, you will be able to see the request type in request headers. 
+ 
+ 
+```
+
+
+
+
+
+## Browsability 
+
+
+
+API chooses the content type of the response based on the client request, it will by default return an HTML-formated representation of the resource when the resource is requested by a web browser. 
+
+
+
+This allows for the API to return a fully web-browsable HTML representation. 
+
+
+
+Having a web-browable API is a big win which makes developing and using the API much easier. It lowers the barrier-to-entry for other developers wanting to inspect and work with your API. 
+
+
+
