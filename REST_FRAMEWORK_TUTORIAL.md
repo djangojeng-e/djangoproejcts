@@ -1204,3 +1204,37 @@ Mixins are added to provide the .retrive(), .update() and .destroy() actions.
 
 
 
+## Using generic class-based views 
+
+
+
+Using the mixin classes to reduce the amount of code than before. However, REST framework provides a set of already mixed-in generic views that can be used to trim down the views.py module even further. 
+
+
+
+
+
+```python
+from snippets.models import Snippet 
+from snippets.serializers import SnippetSerializer 
+from rest_framework import generics 
+
+
+class SnippetList(generics.ListCreateAPIView): 
+    queryset = Snippet.objects.all() 
+    serializer_class = SnippetSerializer 
+    
+    
+class SnippetDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Snippet.objects.all()
+    serializer_class = SnippetSerializer 
+    
+    
+```
+
+
+
+The code has been trimmed excessively. the code now looks good, clean and idomatic Django 
+
+
+
