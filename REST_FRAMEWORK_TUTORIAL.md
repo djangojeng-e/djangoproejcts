@@ -1160,3 +1160,47 @@ After refactoring, it is still pretty similar to the function based view. After 
 
 
 
+## Using Mixins 
+
+
+
+One of the big advantage of using class-based views is that it allows us to easily compose reusable bits of behaviour. 
+
+
+
+The **CRUD** Create / Retrieve / Update / Delete operations are going to be similar for any model-backed API views we create. 
+
+
+
+Those bits of common behaviour are implemented in REST framework's mixin classes. 
+
+
+
+Compose views by using Mixin classes. 
+
+
+
+ 
+
+- View will be built using GenericAPIView and adding in ListModelMixin and CreateModelMixin. 
+
+
+
+The base class provides the core functionality and the mixin classes provide the .list() and .create() actions. 
+
+
+
+Then, get and post methods can be bound to the appropriate actions. 
+
+
+
+
+
+**GenericAPIView class provide the core functionality**
+
+Mixins are added to provide the .retrive(), .update() and .destroy() actions. 
+
+
+
+
+
