@@ -4,5 +4,5 @@ app_name = 'snippets'
 
 urlpatterns = [
     path('snippets/', snippet_list),
-    path('snippets/<int:id>/', snippet_detail),
+    path('snippets/<int:pk>/', snippet_detail),
 ]
