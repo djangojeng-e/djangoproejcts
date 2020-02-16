@@ -1,4 +1,11 @@
+/requirements.txt
+/secrets.json
+
 .idea
+# Django User-uploaded static files root
+/.media
+/.static
+app/*.ipynb
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -366,6 +373,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# End of https://www.gitignore.io/api/linux,macos,python,django,windows,database,pycharm+all,jupyternotebooks,visualstudiocode
 
