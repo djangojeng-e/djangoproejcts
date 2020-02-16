@@ -813,3 +813,67 @@ If a request is made with a method that the view doesn't handle, it will end up 
 
 
 
+# Testing our first attempt at a Web API
+
+
+
+Our API can be tested using curl or httpie. Httpie is a user friendly http client that's written in Python. 
+
+
+
+To test the API, 
+
+
+
+- get runserver 
+- move to localhost/snippets/ 
+
+
+
+```python
+http http://127.0.0.1:8000/snippets/
+
+HTTP/1.1 200 OK
+...
+[
+  {
+    "id": 1,
+    "title": "",
+    "code": "foo = \"bar\"\n",
+    "linenos": false,
+    "language": "python",
+    "style": "friendly"
+  },
+  {
+    "id": 2,
+    "title": "",
+    "code": "print(\"hello, world\")\n",
+    "linenos": false,
+    "language": "python",
+    "style": "friendly"
+  }
+]
+
+# We can get a particular snippet by referencing its id: 
+
+http http://127.0.0.1:8000/snippets/2/
+
+HTTP/1.1 200 OK
+...
+{
+  "id": 2,
+  "title": "",
+  "code": "print(\"hello, world\")\n",
+  "linenos": false,
+  "language": "python",
+  "style": "friendly"
+}
+```
+
+
+
+
+
+> So far, Serialization API feels similar to Django's Forms API, and some regular Django Views. 
+
+> 
