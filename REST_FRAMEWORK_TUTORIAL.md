@@ -1411,3 +1411,29 @@ path('users/<int:pk>/', views.UserDetail.as_view())
 
 
 
+## Associating Snippets with Users 
+
+
+
+
+
+There'd be no way of associating the user that created the snippet when a code snippet is created. The user is not sent as part of the serialized representation, but is instead a property of the inocming request. 
+
+
+
+overriding a .perform_create() method on the snippet views will allow us to modify how the instance save is managed and handle any information that is implicit in the inocming request or requested URL. 
+
+
+
+```python
+def perform_create(self, serializer): 
+    serailizer.save(owner=self.request.user)
+   
+```
+
+
+
+The create() method will be passed an additional 'owner' field, along with the validated data from the request. 
+
+
+
