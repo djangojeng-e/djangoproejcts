@@ -1474,3 +1474,33 @@ It can also take the dotted notation shown above. It will traverse the given att
 
 
 The untyped ReadonlyField is always read-only and will be used for serialized representations, but will not be used for updating model instances when they are deserialized. 
+
+
+
+
+
+## Adding required permissions to views 
+
+
+
+The code snippets are associated with users, we want to make sure that only authenticated users are able to create, update and delete code snippets. 
+
+
+
+REST framework includes a number of permission classes that we can use to restrict who can access a given view. 
+
+
+
+IsAuthenticatedOrReadOnly, will ensure that authenticated requests get read-write access, and unauthenticated requests get read-only access. 
+
+
+
+```python
+from rest_framework import permissions 
+ 
+    
+    # add the following property to both SnippetList and SnippetDetail view classes 
+    
+permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+```
+
