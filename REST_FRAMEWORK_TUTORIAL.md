@@ -1504,3 +1504,37 @@ from rest_framework import permissions
 permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 ```
 
+
+
+
+
+## Adding login to the Browsable API 
+
+
+
+If you open a browser and navigate to the browsable API, you need to be logged in to create a new code snippets. 
+
+
+
+config/urls.py 
+
+
+
+```python
+from django.conf.urls import include 
+
+urlpatterns += [
+    path('api-auth/', include('rest_framework.urls')),
+]
+```
+
+
+
+The api-auth/ part of pattern can actually be whatever URL you want to use. 
+
+
+
+Now, open up the browser and refresh the page, "LOGIN" link in the top right of the page should be there. 
+
+
+
