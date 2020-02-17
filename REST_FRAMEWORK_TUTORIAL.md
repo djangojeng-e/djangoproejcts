@@ -1423,7 +1423,7 @@ There'd be no way of associating the user that created the snippet when a code s
 
 overriding a .perform_create() method on the snippet views will allow us to modify how the instance save is managed and handle any information that is implicit in the inocming request or requested URL. 
 
-
+Adding the below on SnippetList view class. 
 
 ```python
 def perform_create(self, serializer): 
@@ -1437,3 +1437,40 @@ The create() method will be passed an additional 'owner' field, along with the v
 
 
 
+## 
+
+## Updating our serializer 
+
+
+
+
+
+Now that snippets are associated with the user that created them. serializers.py has to be updated to reflect on this change. 
+
+
+
+
+
+
+
+in serializers.py 
+
+
+
+```python
+owner = serializers.ReadOnlyField(source='owner.username')
+```
+
+
+
+
+
+This field does something quite interesting. The source argument controls which attribute is used to populate a field, and can point at any attribute on the serialized instance. 
+
+
+
+It can also take the dotted notation shown above. It will traverse the given attributes. The field we've added is the untyped ReadOnlyField class, in contrast to the other typed fields, such as CharField, BooleanField 
+
+
+
+The untyped ReadonlyField is always read-only and will be used for serialized representations, but will not be used for updating model instances when they are deserialized. 

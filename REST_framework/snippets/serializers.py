@@ -11,6 +11,7 @@ class SnippetSerializer(serializers.Serializer):
     linenos = serializers.BooleanField(required=False)
     language = serializers.ChoiceField(choices=LANGUAGE_CHOICES, default='python')
     style = serializers.ChoiceField(choices=STYLE_CHOICES, default='friendly')
+    owner = serializers.ReadOnlyField(source='owner.username')
 
     def create(self, validated_data):
         """
@@ -43,7 +44,8 @@ class SnippetSerializer(serializers.Serializer):
             'code',
             'linenos',
             'language',
-            'style'
+            'style',
+            'owner'
         ]
 
 
