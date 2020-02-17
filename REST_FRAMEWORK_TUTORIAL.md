@@ -1337,3 +1337,77 @@ admin2 / 12345678
 
 admin3 / 12345678
 
+
+
+
+
+## Adding endpoints for User models 
+
+
+
+Now, we have some users to work with. Adding representations of those users to the API. 
+
+
+
+```python
+
+from django.contrib.auth.models import User 
+
+class UserSerializer(serializers.ModelSerializer):
+    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
+    
+    class Meta: 
+        model = User 
+        fields = ['id', 'username', 'snippets']
+        
+        
+```
+
+
+
+
+
+'snippets' is a reverse relationship on the User model, it will not be included by default when using the ModelSerializer class. We an expicit field has been added for it. 
+
+
+
+
+
+views.py has some additions for read-only views for the user representations. 
+
+
+
+```python
+from django.contrib.auth.models import User 
+
+
+class UserList(generics.ListAPIView): 
+    queryset = User.objects.all()
+    serializer_class = UserSerializer 
+    
+    
+class UserDetail(generics.RetrieveAPIView): 
+    queryset = User.objects.all()
+    serializer_class = UserSerializer 
+    
+    
+  
+```
+
+
+
+Referencing the views into the API by configuring the snippets/urls.py 
+
+
+
+
+
+```python
+path('users/', views.UserList.as_view())
+path('users/<int:pk>/', views.UserDetail.as_view())
+```
+
+
+
+
+
