@@ -39,7 +39,7 @@ def snippet_detail(request, pk):
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
-        return JsonResponse(serializer.erros, status=400)
+        return JsonResponse(serializer.errors, status=400)
 
     elif request.method == 'DELETE':
         snippet.delete()
