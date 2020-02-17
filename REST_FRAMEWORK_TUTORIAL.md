@@ -1238,3 +1238,102 @@ The code has been trimmed excessively. the code now looks good, clean and idomat
 
 
 
+
+
+# 4. Authentication & Permissions 
+
+
+
+Up to this stage, the API does not have any restirctions on who can edit or delete code snippets. 
+
+
+
+In order to have some more advanced behaviour in order to make sure 
+
+
+
+- Code snippets are always associated with a creator. 
+- Only authenticated users may create snippets. 
+- Only the creator of a snippet may update or delete it. 
+- Unauthenticated requests should have full read-only access. 
+
+
+
+## Adding information to the model 
+
+
+
+Couple of changes to Snippet model class. 
+
+
+
+owner = models.ForeignKey('auth.User', related_name='snippets', on_delete=models.CASCADE)
+highlighted = models.TextField()
+
+
+
+We need to make sure that when model is saved, we populate the highlighted field using the pygments code highlighting library 
+
+
+
+Further imports required 
+
+
+
+```python
+
+from pygments.lexers import get_lexer_by_name 
+from pygments.formatters.html import HtmlFormatter 
+from pygments import highlight 
+
+
+```
+
+
+
+Add a .save() method to model class 
+
+
+
+```python
+def save(self, *args, **kwargs):
+    """
+    Use the pygments library to create a highlighted HTML 
+    representaiton of the code snippet. 
+    """
+    lexer = get_lexer_by_name(self.language)
+    linenos = 'table' if self.linenos else False 
+    options = {'title': self.title} if self.title else {}
+    formatter = HtmlFormatter(style=self.style, linenos=linenos, full=True, **options)
+    self.highlighted = highlight(self.code, lexer, formatter)
+    super(Snippet, self).save(*args, **kwargs)
+    
+```
+
+
+
+After models been modified, database tables needs to be updated. Delete the previous DB and create the new DB. 
+
+
+
+
+
+```bash
+rm -f db.sqlite3 
+rm - r snippets/migrations
+python manage.py makemigrations snippets 
+python manage.py migrate 
+```
+
+
+
+
+
+Create a few users 
+
+admin1 / 12345678 
+
+admin2 / 12345678
+
+admin3 / 12345678
+
