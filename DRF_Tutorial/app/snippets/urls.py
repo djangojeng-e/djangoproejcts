@@ -1,14 +1,34 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from .apis import generic
+from .apis import generic, viewsets
 from .views import snippet_list, snippet_detail
 app_name = 'snippets'
 
-urlpatterns = [
-    # path('snippets/', snippet_list),
-    # path('snippets/<int:pk>/', snippet_detail),
+router = DefaultRouter()
+router.register(r'snippets', viewsets.SnippetViewSet)
 
-    # Class-based view 를 사용하는 경우, as_view()함수를 호출
+# router.urls 는 아래 urlpatterns_viewset의 모든 내용이 들어있음.
+
+urlpatterns_viewset = [
+    path('snippets/', viewsets.SnippetViewSet.as_view({
+        'get': 'list',
+        'post': 'create',
+    })),
+    path('snippets/<int:pk>/', viewsets.SnippetViewSet.as_view({
+        'get': 'retireve',
+        'patch': 'partial_update',
+        'delete': 'destroy',
+    })),
+]
+
+urlpatterns_api_view = [
     path('snippets/', generic.SnippetListCreateAPIView.as_view()),
     path('snippets/<int:pk>/', generic.SnippetRetrieveUpdateDestroyAPIView.as_view()),
+]
+
+urlpatterns = [
+    path('api-view/', include(urlpatterns_api_view)),
+    path('viewset/', include(urlpatterns_viewset)),
+    path('router/', include(router.urls)),
 ]
