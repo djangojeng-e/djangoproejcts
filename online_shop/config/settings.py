@@ -138,5 +138,7 @@ AWS_LOCATION = 'static'
 STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
+# 미디어 파일을 위한 파일 스토리지 설정
+DEFAULT_FILE_STORAGE = 'config.asset_storage.MediaStorage'
 
 
