@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import json
+
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+secrets_path = os.path.join(BASE_DIR, 'secrets.json')
+SECRETS = json.load(open(secrets_path))
 
 
 # Quick-start development settings - unsuitable for production
@@ -72,13 +78,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+print(SECRETS['DATABASES'])
+DATABASES = SECRETS['DATABASES']
 
 
 # Password validation
