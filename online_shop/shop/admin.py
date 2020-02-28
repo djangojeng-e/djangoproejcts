@@ -21,4 +21,5 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'stock', 'available_display', 'available_order']
     # list_editable enables main values to be edited immediately.
 
+
 admin.site.register(Product, ProductAdmin)
