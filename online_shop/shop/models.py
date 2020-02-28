@@ -12,6 +12,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, unique=True, allow_unicode=True)
     # Creates URL as per names
     # allow_unicode allows to use other language values other than english.
+
     class Meta:
         ordering = ['name']
         verbose_name = 'category'
