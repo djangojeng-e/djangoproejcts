@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'cart',
 ]
 
+# allauth additional settings
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -68,6 +69,9 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 
+# CART_ID key value to be used with cart.py in cart app
+
+CART_ID = 'cart_in_session'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
