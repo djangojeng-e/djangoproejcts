@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.naver',
     'cart',
+    'coupon',
 ]
 
 # allauth additional settings
