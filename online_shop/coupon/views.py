@@ -23,3 +23,7 @@ def add_coupon(request):
             request.session['coupon_id'] = None
     return redirect('cart:detail')
 
+
+# querysets
+# coupon = Coupon.objects.get(code__iexact=code, use_from__lte=now, use_to__gte=now, active=True)
+# case insensitive search : iexact
