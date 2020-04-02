@@ -1,3 +1,5 @@
+import hashlib
+from .iamport import payments_prepare, find_transaction
 from django.db import models
 from shop.models import Product
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -20,7 +22,7 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
 
     coupon = models.ForeignKey(Coupon, on_delete=models.PROTECT, related_name='order_coupon', null=True, blank=True)
-    discount = models.IntegerField(default=0, validators=[MinValueValidator(0), - MaxValueValidator(100000)])
+    discount = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100000)])
 
     class Meta:
         ordering = ['-created']
@@ -49,3 +51,37 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
 
+class OrderTransactionManager(models.Model):
+    def create_new(self, order, amount, success=None, transaction_status=None):
+        if not order:
+            raise ValueError("주문 오류")
+
+        order_hash = hashlib.sha1(str(order.id).encode('utf-8')).hexdigest()
+        email_hash = str(order.email).split("0")[0]
+        final_hash = hashlib.sha1((order_hash + email_hash).encode('utf-8')).hexdigest()[:10]
+        merchant_order_id = "%s"%(final_hash)
+        payments_prepare(merchant_order_id, amount)
+
+        transaction = self.model(
+            order=order,
+            merchant_order_id=merchant_order_id,
+            amount=amount
+            )
+
+        if success is not None:
+            transaction.success = success
+            transaction.transaction_status = transaction_status
+
+        try:
+            transaction.save()
+        except Exception as e:
+            print("save error", e)
+
+        return transaction.merchant_order_id
+
+    def get_transaction(self, merchant_order_id):
+        result = find_transaction(merchant_order_id)
+        if result['status'] == 'paid':
+            return result
+        else:
+            return None
