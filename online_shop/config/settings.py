@@ -145,6 +145,12 @@ USE_L10N = True
 USE_TZ = True
 
 
+# IAMPORT Values
+
+IAMPORT_KEY = SECRETS['IAMPORT_REST_API_KEY']
+IAMPORT_SECRET = SECRETS['IAMPORT_REST_API_SECRET']
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
