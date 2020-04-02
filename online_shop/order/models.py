@@ -1,4 +1,5 @@
 from django.db import models
+from shop.models import Product
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -33,5 +34,18 @@ class Order(models.Model):
     def get_total_price(self):
         total_product = self.get_total_product()
         return total_product - self.discount
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='order_products')
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return '{}'.format(self.id)
+
+    def get_item_price(self):
+        return self.price * self.quantity
 
 
