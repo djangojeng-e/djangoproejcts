@@ -105,3 +105,35 @@ function AjaxStoreTransaction(e, order_id, amount, type) {
     });
     return merchant_id;
 }
+
+function Imptransaction(e, order_id, merchant_id, imp_id, amount) {
+    e.preventDefault();
+    var request = $.ajax({
+        method: "POST",
+        url: order_validation_url,
+        async: false,
+        data: {
+            order_id:order_id,
+            merchant_id: merchant_id,
+            imp_id: imp_id,
+            amount: amount,
+
+           csrfmiddlewaretoken: csrf_token
+        }
+    });
+    request.done(function (data) {
+        if (data.works) {
+            $(location).attr('href', location.origin+order_complete_url='?order_id'+order_id)
+        }
+    });
+    request.fail(function (jqXHR, textStatus){
+        if (jqXHR.status == 404) {
+            alert("페이지가 존재하지 않습니다.");
+        } else if (jqXHR.status == 403){
+            alert("로그인 해주세요.");
+        } else {
+
+            alert("문제가 발생했습니다. 다시 시도해 주세요");
+        }
+    });
+}
