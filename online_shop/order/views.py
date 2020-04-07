@@ -23,7 +23,7 @@ def order_create(request):
                                          quantity=item['quantity'])
 
                 cart.clear()
-                return render(request, 'order/created.html', {'order': order})
+                return render(request, 'order/create.html', {'order': order})
     else:
         form = OrderCreateForm()
     return render(request, 'order/create.html', {'cart': cart, 'form': form})
@@ -32,7 +32,7 @@ def order_create(request):
 def order_complete(request):
     order_id = request.GET.get('order_id')
     order = Order.objects.get(id=order_id)
-    return render(request, 'order/created.html', {'order': order})
+    return render(request, 'order/create.html', {'order': order})
 
 
 from django.views.generic.base import View
