@@ -17,3 +17,4 @@ class Order(models.Model):
         db_table = 'fasctcampus_order'
         verbose_name = '주문'
         verbose_name_plural = '주문'
+
