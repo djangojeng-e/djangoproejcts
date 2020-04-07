@@ -137,3 +137,5 @@ from django.contrib.admin.views.decorators import staff_member_required
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'order/admin/detail.html', {'order': order})
+
+
