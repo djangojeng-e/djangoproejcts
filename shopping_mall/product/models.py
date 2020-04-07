@@ -10,3 +10,7 @@ class Product(models.Model):
     stock = models.IntegerField(verbose_name='재고')
     register_date = models.DateTimeField(auto_now_add=True, verbose_name='등록날자')
 
+    class Meta:
+        db_table = 'fasctcampus_product'
+        verbose_name = '상품'
+        verbose_name_plural = '상품'
