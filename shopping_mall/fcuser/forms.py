@@ -1,4 +1,5 @@
 from django import forms
+from .models import Fcuser
 
 
 class RegisterForm(forms.Form):
@@ -24,6 +25,7 @@ class RegisterForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+        email = cleaned_data.get('email')
         password = cleaned_data.get('password')
         re_password = cleaned_data.get('re_password')
 
@@ -31,3 +33,9 @@ class RegisterForm(forms.Form):
             if password != re_password:
                 self.add_error('password', '비밀번호가 서로 다릅니다')
                 self.add_error('re_password', '비밀번호가 서로 다릅니다')
+            else:
+                fcuser = Fcuser(
+                    email=email,
+                    password=password
+                )
+                fcuser.save()
