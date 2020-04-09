@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView
-
+from django.utils.decorators import method_decorator
+from fcuser.decorator import login_required
 from .forms import RegisterForm
 from django.views.generic.edit import FormView
 from .models import Order
 
 # Create your views here.
 
-
+@method_decorator(login_required, name='dispatch')
 class OrderCreate(FormView):
     form_class = RegisterForm
     success_url = '/product/'
@@ -23,6 +24,7 @@ class OrderCreate(FormView):
         return kw
 
 
+@method_decorator(login_required, name='dispatch')
 class OrderList(ListView):
     model = Order
     template_name = 'order.html'
@@ -31,3 +33,8 @@ class OrderList(ListView):
     def get_queryset(self, **kwargs):
         queryset = Order.objects.filter(fcuser__email=self.request.session.get('user'))
         return queryset
+
+# 데코레이터
+# 함수를 Wrapping
+# 기능의 재사용
+
