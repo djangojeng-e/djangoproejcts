@@ -28,7 +28,6 @@ class RegisterForm(forms.Form):
         quantity = cleaned_data.get('quantity')
         product = cleaned_data.get('product')
 
-        if quantity and product:
-            self.product = product
+        if not (quantity and product):
             self.add_error('quantity', '값이 없습니다')
             self.add_error('product', '상품이 없습니다')
