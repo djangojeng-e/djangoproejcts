@@ -41,6 +41,10 @@
         </div>
         <div class="content">
             <div class="messageDiv">
+                    <!-- 
+                    form action 은 서버로 데이터를 전달할때 어떠한 url 로 전달할 것인지를 나타낸다.
+                    우리가 action 에 적어주는 경로로 데이터가 전달된다. 
+                    -->
                 <form action="./createTodo/" method="POST">{% csrf_token %}
                     <div class="input-group">
                         <input id="todoContent" name="todoContent" type="text" class="form-control" placeholder="메모할 내용을 적어주세요">
