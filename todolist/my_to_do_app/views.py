@@ -20,3 +20,11 @@ def CreateTodo(request):
     # return HttpResponse("Create todo를 할거야! =>" + user_input_str)
 
 
+def doneTodo(request):
+    done_todo_id = request.GET['todoNum']
+    print("완료한 todo의 id", done_todo_id)
+    todo = Todo.objects.get(id = done_todo_id)
+    todo.delete()
+    return HttpResponseRedirect(reverse('index'))
+
+
